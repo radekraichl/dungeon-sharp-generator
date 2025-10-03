@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Dungeon;
+namespace DungeonGenerator;
 
 internal class Cell(Point position)
 {

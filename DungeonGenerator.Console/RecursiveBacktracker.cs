@@ -1,10 +1,10 @@
-﻿namespace Dungeon;
+﻿namespace DungeonGenerator;
 
 internal class RecursiveBacktracker
 {
-    public static Grid Maze(Grid grid, Cell startAt = null)
+    public static void Maze(Grid grid, Maze maze, Cell startAt = null)
     {
-        startAt ??= grid.RandomCell();
+        startAt ??= maze.RandomCell();
         var stack = new Stack<Cell>();
 
         if (startAt == null)
@@ -27,7 +27,5 @@ internal class RecursiveBacktracker
                 stack.Pop();
             }
         }
-
-        return grid;
     }
 }

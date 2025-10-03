@@ -1,7 +1,7 @@
-﻿using Dungeon;
+﻿using DungeonGenerator;
 using System.Diagnostics;
 
-int seed = 18;
+int seed = 84;
 
 while (true)
 {
@@ -9,9 +9,10 @@ while (true)
 
     Rand.Init(seed);
     Grid grid = new(101, 31);
+    Maze maze = new(grid);
     RoomManager rooms = new(grid);
     rooms.CraveRooms(5, 11, 50);
-    grid.AddMaze();
+    maze.Add();
     rooms.AddConnectors();
     rooms.ConnectRooms();
     sw.Stop();

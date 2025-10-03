@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Dungeon;
+namespace DungeonGenerator;
 
 internal class Tile(Point position, Tile.TileType type)
 {

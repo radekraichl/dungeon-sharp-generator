@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.CompilerServices;
 
-namespace Dungeon;
+namespace DungeonGenerator;
 
 internal class RoomManager(Grid grid)
 {

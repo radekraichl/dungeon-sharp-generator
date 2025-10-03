@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Dungeon;
+namespace DungeonGenerator;
 
 internal class Room(int min, int max, int id, Grid grid)
 {
