@@ -7,14 +7,12 @@ internal class RoomManager
 {
     private readonly Grid _grid;
     private readonly List<Room> _rooms = [];
-    private readonly Pathfinder _pathFinder;
 
     public List<Room> Rooms => _rooms;
 
     public RoomManager(Grid grid)
     {
         _grid = grid;
-        _pathFinder = new(_grid);
     }
 
     public void CraveRooms(int min, int max, int numberOfAttempts)
@@ -53,33 +51,6 @@ internal class RoomManager
                 }
             }
         }
-    }
-
-    private Point? FindNearestConnector(Point fromConnector)
-    {
-        Point? nearest = null;
-        int bestDist = int.MaxValue;
-
-        foreach (var room in _rooms)
-        {
-            if (room.Merged)
-                continue;
-
-            foreach (var connector in room.Connectors)
-            {
-                _grid.GetTile(connector).Type = Tile.TileType.Corridor;
-                int dist = _pathFinder.FindPath(fromConnector, connector);
-                _grid.GetTile(connector).Type = Tile.TileType.RoomConnector;
-
-                // If the path does not exist, use int.MaxValue
-                if (dist < bestDist)
-                {
-                    bestDist = dist;
-                    nearest = connector;
-                }
-            }
-        }
-        return nearest;
     }
 
     //private Point? FindNearestConnector2(Point fromConnector)

@@ -3,15 +3,19 @@
   "WorkspaceRootPath": "D:\\Programming\\C#\\DungeonSharpGenerator\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|d:\\programming\\c#\\dungeonsharpgenerator\\dungeongenerator.console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|solutionrelative:dungeongenerator.console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|d:\\programming\\c#\\dungeonsharpgenerator\\dungeongenerator.console\\roommanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|solutionrelative:dungeongenerator.console\\roommanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|d:\\programming\\c#\\dungeonsharpgenerator\\dungeongenerator.console\\grid.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|solutionrelative:dungeongenerator.console\\grid.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Programming\\C#\\GamesPatterns\\Dungeon\\Grid.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|d:\\programming\\c#\\dungeonsharpgenerator\\dungeongenerator.console\\recursivebacktracker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|solutionrelative:dungeongenerator.console\\recursivebacktracker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|d:\\programming\\c#\\dungeonsharpgenerator\\dungeongenerator.console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AF3EC45-8474-999A-7C61-5E379539D7EF}|DungeonGenerator.Console\\DungeonGenerator.Console.csproj|solutionrelative:dungeongenerator.console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,7 +25,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -65,7 +69,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Grid.cs",
+              "DocumentMoniker": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\Grid.cs",
+              "RelativeDocumentMoniker": "DungeonGenerator.Console\\Grid.cs",
+              "ToolTip": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\Grid.cs",
+              "RelativeToolTip": "DungeonGenerator.Console\\Grid.cs",
+              "ViewState": "AgIAANgAAAAAAAAAAAAQwCUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:05:19.968Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "RoomManager.cs",
+              "DocumentMoniker": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\RoomManager.cs",
+              "RelativeDocumentMoniker": "DungeonGenerator.Console\\RoomManager.cs",
+              "ToolTip": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\RoomManager.cs",
+              "RelativeToolTip": "DungeonGenerator.Console\\RoomManager.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAADwvzUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T22:05:06.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\Program.cs",
               "RelativeDocumentMoniker": "DungeonGenerator.Console\\Program.cs",
@@ -79,25 +109,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "RecursiveBacktracker.cs",
-              "DocumentMoniker": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\RecursiveBacktracker.cs",
-              "RelativeDocumentMoniker": "DungeonGenerator.Console\\RecursiveBacktracker.cs",
-              "ToolTip": "D:\\Programming\\C#\\DungeonSharpGenerator\\DungeonGenerator.Console\\RecursiveBacktracker.cs",
-              "RelativeToolTip": "DungeonGenerator.Console\\RecursiveBacktracker.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-30T04:16:11.455Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "Grid.cs",
               "DocumentMoniker": "D:\\Programming\\C#\\GamesPatterns\\Dungeon\\Grid.cs",
               "RelativeDocumentMoniker": "..\\GamesPatterns\\Dungeon\\Grid.cs",
               "ToolTip": "D:\\Programming\\C#\\GamesPatterns\\Dungeon\\Grid.cs",
               "RelativeToolTip": "..\\GamesPatterns\\Dungeon\\Grid.cs",
-              "ViewState": "AgIAAOcAAAAAAAAAAAAAAAYBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-29T21:21:53.478Z",
               "EditorCaption": ""
