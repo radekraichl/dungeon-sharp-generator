@@ -8,16 +8,13 @@ while (true)
     var sw = Stopwatch.StartNew();
 
     Rand.Init(seed);
-    Grid grid = new(161, 41);
-    //Grid grid = new(31, 21);
+    Grid grid = new(101, 31);
     RoomManager rooms = new(grid);
-    rooms.CraveRooms(5, 11, 100);
-    //rooms.CraveRooms(5, 7, 4);
+    rooms.CraveRooms(5, 11, 50);
     grid.AddMaze();
     rooms.AddConnectors();
     rooms.ConnectRooms();
     sw.Stop();
-
 
     Console.WriteLine(grid);
     Console.WriteLine($"SEED: {seed}");
@@ -38,7 +35,4 @@ while (true)
         break;
     }
     Console.Clear();
-
-    //seed++;
-    //Thread.Sleep(100);
 }
