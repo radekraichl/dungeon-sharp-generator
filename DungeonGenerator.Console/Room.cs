@@ -6,13 +6,13 @@ internal class Room(int min, int max, int id, Grid grid)
 {
     private const int _mapMargin = 1;
     private const int _roomsMargin = 1;
-    
+
     private readonly Grid _grid = grid ?? throw new ArgumentNullException(nameof(grid));
 
     public int ID { get; } = id;
     public bool Merged { get; set; } = false;
     public Point Position { get; private set; }
-    public List<Point> Connectors { get; set; } = []; 
+    public List<Point> Connectors { get; set; } = [];
     public int Width { get; private set; }
     public int Height { get; private set; }
 

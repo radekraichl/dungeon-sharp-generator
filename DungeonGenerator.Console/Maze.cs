@@ -54,7 +54,7 @@ internal class Maze(Grid grid)
 
         while (_cells.Any(c => c.Links.Count == 0))
         {
-            RecursiveBacktracker.Maze(_grid, this);
+            RecursiveBacktracker.Maze(this);
         }
 
         for (int y = 0; y < _grid.Height; y++)

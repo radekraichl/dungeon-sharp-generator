@@ -2,7 +2,7 @@
 
 internal class RecursiveBacktracker
 {
-    public static void Maze(Grid grid, Maze maze, Cell startAt = null)
+    public static void Maze(Maze maze, Cell startAt = null)
     {
         startAt ??= maze.RandomCell();
         var stack = new Stack<Cell>();
@@ -14,11 +14,11 @@ internal class RecursiveBacktracker
 
         while (stack.Count != 0)
         {
-            var current = stack.Peek();
+            Cell current = stack.Peek();
             var neighbors = current.Neighbors.Where(n => n.Links.Count == 0).ToList();
             if (neighbors.Count != 0)
             {
-                var neighbor = neighbors[Rand.GetInt(0, neighbors.Count)];
+                Cell neighbor = neighbors[Rand.GetInt(0, neighbors.Count)];
                 current.Link(neighbor);
                 stack.Push(neighbor);
             }
