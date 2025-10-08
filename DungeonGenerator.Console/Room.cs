@@ -94,6 +94,11 @@ internal class Room(int min, int max, int id, Grid grid)
         return false;
     }
 
+    public bool Intersects(Room other)
+    {
+        return !(Right < other.Left || Left > other.Right || Bottom < other.Top || Top > other.Bottom);
+    }
+
     public void RemoveConnectors(int chance = 1)
     {
         var survivors = new List<Point>();
@@ -114,8 +119,17 @@ internal class Room(int min, int max, int id, Grid grid)
         Connectors.AddRange(survivors);
     }
 
-    public bool Intersects(Room other)
+    public void RemoveNearbyConnectors(Point connector)
     {
-        return !(Right < other.Left || Left > other.Right || Bottom < other.Top || Top > other.Bottom);
+        foreach (var neighbor in _grid.GetNeighbors4(connector))
+        {
+            var tile = _grid.GetTile(neighbor);
+
+            if (tile.Type == Tile.TileType.RoomConnector)
+            {
+                tile.Type = Tile.TileType.Wall;
+                Connectors.Remove(neighbor);
+            }
+        }
     }
 }

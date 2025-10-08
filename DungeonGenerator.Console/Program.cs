@@ -1,5 +1,6 @@
 ﻿using DungeonGenerator;
 using System.Diagnostics;
+using System.Drawing;
 
 int seed = 84;
 
@@ -20,7 +21,6 @@ while (true)
     Console.WriteLine(grid);
     Console.WriteLine($"SEED: {seed}");
     Console.WriteLine($"Generation time: {sw.ElapsedMilliseconds} ms");
-    //Console.WriteLine(rooms.debug);
 
     var key = Console.ReadKey(true);
     if (key.Key == ConsoleKey.RightArrow)

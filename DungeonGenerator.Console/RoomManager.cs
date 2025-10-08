@@ -55,7 +55,7 @@ internal class RoomManager(Grid grid)
                type == Tile.TileType.Corridor;
     }
 
-    private Point? FindNearestConnector(Point fromConnector, List<Point> path = null)
+    private Point FindNearestConnector(Point fromConnector, List<Point> path = null)
     {
         var queue = new Queue<Point>();
         var visited = new HashSet<Point>();
@@ -105,14 +105,12 @@ internal class RoomManager(Grid grid)
                             // a nakonec přidáme i samotný cílový konektor
                             path.Add(neighbor);
                         }
-
                         return neighbor;
                     }
                 }
             }
         }
-
-        return null;
+        return Point.Empty;
     }
 
     public void ConnectRooms()
@@ -126,43 +124,42 @@ internal class RoomManager(Grid grid)
         {
             currentRoom.Merged = true;
             Point currentConnector = new();
-            Point? nearestConnectorTest = null;
+            Point targetConnector = Point.Empty;
             var uncheckedConnectors = new List<Point>(currentRoom.Connectors);
             var path = new List<Point>();
 
-            while (uncheckedConnectors.Count > 0 && nearestConnectorTest == null)
+            while (uncheckedConnectors.Count > 0 && targetConnector == Point.Empty)
             {
                 // Vezmeme náhodný konektor z nezkoušených
                 currentConnector = uncheckedConnectors.RandomElement();
                 // Odebereme ho, aby se už nezopakoval
                 uncheckedConnectors.Remove(currentConnector);
                 // Najdeme nejbližší konektor nějaké nemergnuté místnosti
-                nearestConnectorTest = FindNearestConnector(currentConnector, path);
+                targetConnector = FindNearestConnector(currentConnector, path);
             }
 
             // Když cesta neexistuje
-            if (nearestConnectorTest == null)
+            if (targetConnector == Point.Empty)
             {
                 currentRoom = visitedRooms.Pop();
                 continue;
             }
             visitedRooms.Push(currentRoom);
 
-            Point nearestConnector = (Point)nearestConnectorTest;
-
             // Najdi tu místnost, které konektor patří
-            Room targetRoom = _rooms.First(r => r.Connectors.Contains(nearestConnector));
+            Room targetRoom = _rooms.First(r => r.Connectors.Contains(targetConnector));
             targetRoom.Merged = true;
 
-            // TODO
-            //targetRoom.RemoveConnectors(50);
+            // Ostranime sousední konektory našich konektorů
+            currentRoom.RemoveNearbyConnectors(currentConnector);
+            targetRoom.RemoveNearbyConnectors(targetConnector);
 
             foreach (var point in path)
             {
                 _grid.GetTile(point).Type = Tile.TileType.CorridorPath;
             }
 
-            // Z target room udelama current room
+            // Z target room uděláme current room
             currentRoom = targetRoom;
         }
     }

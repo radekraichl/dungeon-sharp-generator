@@ -72,7 +72,7 @@ internal class Grid
     public override string ToString()
     {
         bool printCells = false;
-        bool printAllWalls = true;
+        bool printAllWalls = false;
 
         char[,] chars = new char[Height, Width];
 
@@ -90,6 +90,8 @@ internal class Grid
                             chars[y, x] = '█';
                         else if (printAllWalls)
                             chars[y, x] = '█';
+                        else
+                            chars[y, x] = ' ';
                         break;
 
                     case Tile.TileType.Floor:
