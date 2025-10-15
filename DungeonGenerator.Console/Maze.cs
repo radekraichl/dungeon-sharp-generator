@@ -1,8 +1,8 @@
 ﻿namespace DungeonGenerator;
 
-internal class Maze(Grid grid)
+internal class Maze(Dungeon grid)
 {
-    private readonly Grid _grid = grid;
+    private readonly Dungeon _grid = grid;
     private readonly List<Cell> _cells = [];
 
     public void Add()

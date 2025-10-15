@@ -2,12 +2,12 @@
 
 namespace DungeonGenerator;
 
-internal class Room(int min, int max, int id, Grid grid)
+internal class Room(int min, int max, int id, Dungeon grid)
 {
     private const int _mapMargin = 1;
     private const int _roomsMargin = 1;
 
-    private readonly Grid _grid = grid ?? throw new ArgumentNullException(nameof(grid));
+    private readonly Dungeon _grid = grid ?? throw new ArgumentNullException(nameof(grid));
 
     public int ID { get; } = id;
     public bool Merged { get; set; } = false;

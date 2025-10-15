@@ -3,14 +3,16 @@ using System.Text;
 
 namespace DungeonGenerator;
 
-internal class Grid
+internal class Dungeon
 {
     private readonly List<List<Tile>> _grid = [];
+    private readonly Maze _maze;
+    private readonly RoomManager _roomManager;
 
     public int Width { get; }
     public int Height { get; }
 
-    public Grid(int width, int height)
+    public Dungeon(int width, int height)
     {
         Width = width;
         Height = height;
@@ -24,6 +26,9 @@ internal class Grid
             }
             _grid.Add(row);
         }
+
+        _maze = new(this);
+        _roomManager = new RoomManager(this);
     }
 
     // Indexer
@@ -41,6 +46,37 @@ internal class Grid
             }
             return _grid[row][column];
         }
+    }
+
+    public Dungeon AddMaze()
+    {
+        _maze.Add();
+        return this;
+    }
+
+    public Dungeon CraveRooms(int min, int max, int numberOfAttempts)
+    {
+        _roomManager.CraveRooms(min, max, numberOfAttempts);
+        return this;
+
+    }
+
+    public Dungeon AddConnectors()
+    {
+        _roomManager.AddConnectors();
+        return this;
+    }
+
+    public Dungeon ConnectRooms()
+    {
+        _roomManager.ConnectRooms();
+        return this;
+    }
+
+    public Dungeon ConnectLooseConnectors()
+    {
+        _roomManager.ConnectLooseConnectors();
+        return this;
     }
 
     public void SetTile(Point position, Tile.TileType type, int roomNumber = -1)
@@ -67,6 +103,65 @@ internal class Grid
                 }
             }
         }
+    }
+
+    public IEnumerable<Point> GetNeighbors4(Point position)
+    {
+        int x = position.X;
+        int y = position.Y;
+
+        if (y > 0)
+            yield return new Point(x, y - 1);       // North
+        if (y < Height - 1)
+            yield return new Point(x, y + 1);       // South
+        if (x > 0)
+            yield return new Point(x - 1, y);       // West
+        if (x < Width - 1)
+            yield return new Point(x + 1, y);       // East
+    }
+
+    public int CountNeighbours4(int x, int y, Func<Tile, bool> predicate)
+    {
+        int count = 0;
+        var offsets = new (int dx, int dy)[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
+
+        foreach (var (dx, dy) in offsets)
+        {
+            int nx = x + dx;
+            int ny = y + dy;
+
+            if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
+                continue;
+
+            if (predicate(_grid[ny][nx]))
+                count++;
+        }
+
+        return count;
+    }
+
+    public int CountNeighbours8(int x, int y, Func<Tile, bool> predicate)
+    {
+        int count = 0;
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                int nx = x + dx;
+                int ny = y + dy;
+
+                if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
+                    continue;
+
+                if (predicate(_grid[ny][nx]))
+                    count++;
+            }
+        }
+
+        return count;
     }
 
     public override string ToString()
@@ -127,7 +222,7 @@ internal class Grid
 
                 if (_grid[y][x].RoomNumber != -1)
                 {
-                    chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
+                    //chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
                 }
             }
         }
@@ -143,64 +238,5 @@ internal class Grid
             sb.AppendLine();
         }
         return sb.ToString();
-    }
-
-    public IEnumerable<Point> GetNeighbors4(Point position)
-    {
-        int x = position.X;
-        int y = position.Y;
-
-        if (y > 0)
-            yield return new Point(x, y - 1);       // North
-        if (y < Height - 1)
-            yield return new Point(x, y + 1);       // South
-        if (x > 0)
-            yield return new Point(x - 1, y);       // West
-        if (x < Width - 1)
-            yield return new Point(x + 1, y);       // East
-    }
-
-    public int CountNeighbours4(int x, int y, Func<Tile, bool> predicate)
-    {
-        int count = 0;
-        var offsets = new (int dx, int dy)[] { (0, -1), (0, 1), (-1, 0), (1, 0) };
-
-        foreach (var (dx, dy) in offsets)
-        {
-            int nx = x + dx;
-            int ny = y + dy;
-
-            if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
-                continue;
-
-            if (predicate(_grid[ny][nx]))
-                count++;
-        }
-
-        return count;
-    }
-
-    public int CountNeighbours8(int x, int y, Func<Tile, bool> predicate)
-    {
-        int count = 0;
-        for (int dy = -1; dy <= 1; dy++)
-        {
-            for (int dx = -1; dx <= 1; dx++)
-            {
-                if (dx == 0 && dy == 0)
-                    continue;
-
-                int nx = x + dx;
-                int ny = y + dy;
-
-                if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
-                    continue;
-
-                if (predicate(_grid[ny][nx]))
-                    count++;
-            }
-        }
-
-        return count;
     }
 }
