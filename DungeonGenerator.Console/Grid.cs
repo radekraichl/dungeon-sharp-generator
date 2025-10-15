@@ -111,8 +111,8 @@ internal class Grid
                         break;
 
                     case Tile.TileType.RoomConnector:
-                        chars[y, x] = '█';
-                        //chars[y, x] = '.';
+                        //chars[y, x] = '█';
+                        chars[y, x] = '.';
                         break;
 
                     default:

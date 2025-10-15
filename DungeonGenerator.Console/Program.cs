@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 
-int seed = 84;
+int seed = 109;
 
 while (true)
 {
@@ -12,10 +12,11 @@ while (true)
     Grid grid = new(101, 31);
     Maze maze = new(grid);
     RoomManager rooms = new(grid);
-    rooms.CraveRooms(5, 11, 50);
+    rooms.CraveRooms(5, 11, 4);
     maze.Add();
     rooms.AddConnectors();
     rooms.ConnectRooms();
+    rooms.ConnectLooseConnectors();
     sw.Stop();
 
     Console.WriteLine(grid);

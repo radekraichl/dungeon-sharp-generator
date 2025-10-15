@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Runtime.CompilerServices;
 
 namespace DungeonGenerator;
 
@@ -48,21 +47,106 @@ internal class RoomManager(Grid grid)
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsWalkableTile(Tile.TileType type)
+    public void ConnectRooms()
     {
-        return type == Tile.TileType.CorridorPath ||
-               type == Tile.TileType.Corridor;
+        // Select a random starting room
+        Room currentRoom = _rooms.RandomElement();
+        Stack<Room> visitedRooms = new();
+
+        // Continue until all rooms are connected (merged)
+        while (_rooms.Any(r => !r.Merged))
+        {
+            currentRoom.Merged = true;
+            Point currentConnector = new();
+            Point? targetConnector = null;
+            var uncheckedConnectors = new List<Point>(currentRoom.Connectors);
+            var path = new List<Point>();
+
+            // Try all available connectors in this room until a connection is found
+            while (uncheckedConnectors.Count > 0 && targetConnector == null)
+            {
+                // Pick a random connector from the remaining ones
+                currentConnector = uncheckedConnectors.RandomElement();
+
+                // Remove it from the list to avoid rechecking
+                uncheckedConnectors.Remove(currentConnector);
+
+                // Find the nearest connector of another unmerged room
+                targetConnector = FindNearestConnector(currentConnector, path);
+            }
+
+            // No connection found — backtrack to the previous room
+            if (targetConnector == null)
+            {
+                currentRoom = visitedRooms.Pop();
+                continue;
+            }
+
+            // Mark the current room as visited (store it for possible backtracking)
+            visitedRooms.Push(currentRoom);
+
+            // Find the target room that owns the found connector
+            Room targetRoom = _rooms.First(r => r.Connectors.Contains((Point)targetConnector));
+            targetRoom.Merged = true;
+
+            // Remove nearby connectors to avoid adjacent doors between rooms
+            currentRoom.RemoveNearbyConnectors(currentConnector);
+            targetRoom.RemoveNearbyConnectors((Point)targetConnector);
+
+            // Remove excess connectors, but keep a few randomly for extra variety
+            currentRoom.RemoveConnectors(20);
+
+            // Carve the connecting corridor between the two rooms
+            foreach (var point in path)
+            {
+                _grid.GetTile(point).Type = Tile.TileType.CorridorPath;
+            }
+
+            // Set the newly connected room as the current one for the next iteration
+            currentRoom = targetRoom;
+        }
+
+        // Clean up remaining connectors from the last connected room
+        currentRoom.RemoveConnectors(20);
     }
 
-    private Point FindNearestConnector(Point fromConnector, List<Point> path = null)
+    public void ConnectLooseConnectors()
+    {
+        foreach (var room in _rooms)
+        {
+            // Copy the list because it may be modified during iteration
+            var looseConnectors = new List<Point>(room.Connectors);
+
+            foreach (var connector in looseConnectors)
+            {
+                var path = new List<Point>();
+                var nearestCorridor = FindNearestCorridorPath(connector, path);
+
+                // Skip if no corridor was found
+                if (nearestCorridor is null)
+                    continue;
+
+                // Carve the corridor path from the connector to the nearest corridor
+                foreach (var point in path)
+                {
+                    var tile = _grid.GetTile(point);
+                    tile.Type = Tile.TileType.CorridorPath;
+                }
+
+                // Remove the connector after successful connection
+                room.Connectors.Remove(connector);
+            }
+        }
+    }
+
+    private Point? FindNearestConnector(Point start, List<Point> path = null)
     {
         var queue = new Queue<Point>();
         var visited = new HashSet<Point>();
         var parent = new Dictionary<Point, Point>();
 
-        queue.Enqueue(fromConnector);
-        visited.Add(fromConnector);
+        queue.Enqueue(start);
+        visited.Add(start);
 
         while (queue.Count > 0)
         {
@@ -77,32 +161,32 @@ internal class RoomManager(Grid grid)
 
                 if (IsWalkableTile(tile.Type))
                 {
-                    // běžná průchozí dlaždice
+                    // Regular walkable tile
                     visited.Add(neighbor);
                     parent[neighbor] = pos;
                     queue.Enqueue(neighbor);
                 }
-                else if (tile.Type == Tile.TileType.RoomConnector && neighbor != fromConnector)
+                else if (tile.Type == Tile.TileType.RoomConnector && neighbor != start)
                 {
-                    // našli jsme cílový konektor
+                    // Found a target connector
                     var room = _rooms.FirstOrDefault(r => r.Connectors.Contains(neighbor));
-                    var startRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(fromConnector));
+                    var startRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(start));
 
                     if (room != null && room != startRoom && !room.Merged)
                     {
                         if (path != null)
                         {
                             path.Clear();
-                            var current = pos; // poslední průchozí před konektorem
-                            while (current != fromConnector)
+                            var current = pos; // Last walkable tile before the connector
+                            while (current != start)
                             {
                                 path.Add(current);
                                 current = parent[current];
                             }
-                            path.Add(fromConnector);
+                            path.Add(start);
                             path.Reverse();
 
-                            // a nakonec přidáme i samotný cílový konektor
+                            // Finally, add the target connector itself
                             path.Add(neighbor);
                         }
                         return neighbor;
@@ -110,57 +194,72 @@ internal class RoomManager(Grid grid)
                 }
             }
         }
-        return Point.Empty;
+        return null;
     }
 
-    public void ConnectRooms()
+    private Point? FindNearestCorridorPath(Point start, List<Point> path = null)
     {
-        // Vybereme náhodně místnost
-        Room currentRoom = _rooms.RandomElement();
-        Stack<Room> visitedRooms = new();
+        var queue = new Queue<Point>();
+        var visited = new HashSet<Point>();
+        var parent = new Dictionary<Point, Point>();
 
-        // Smyčka dokud je co spojovat
-        while (_rooms.Any(r => !r.Merged))
+        queue.Enqueue(start);
+        visited.Add(start);
+
+        while (queue.Count > 0)
         {
-            currentRoom.Merged = true;
-            Point currentConnector = new();
-            Point targetConnector = Point.Empty;
-            var uncheckedConnectors = new List<Point>(currentRoom.Connectors);
-            var path = new List<Point>();
+            var pos = queue.Dequeue();
 
-            while (uncheckedConnectors.Count > 0 && targetConnector == Point.Empty)
+            foreach (var neighbor in _grid.GetNeighbors4(pos))
             {
-                // Vezmeme náhodný konektor z nezkoušených
-                currentConnector = uncheckedConnectors.RandomElement();
-                // Odebereme ho, aby se už nezopakoval
-                uncheckedConnectors.Remove(currentConnector);
-                // Najdeme nejbližší konektor nějaké nemergnuté místnosti
-                targetConnector = FindNearestConnector(currentConnector, path);
+                if (visited.Contains(neighbor))
+                    continue;
+
+                var tile = _grid.GetTile(neighbor);
+                if (tile == null)
+                    continue;
+
+                // Check if we found a CorridorPath
+                if (tile.Type == Tile.TileType.CorridorPath && !neighbor.Equals(start))
+                {
+                    // Reconstruct path
+                    if (path != null)
+                    {
+                        path.Clear();
+                        var current = pos; // Last walkable position before corridor
+
+                        // Build path backwards from pos to start
+                        while (parent.ContainsKey(current))
+                        {
+                            path.Add(current);
+                            current = parent[current];
+                        }
+                        path.Add(start);
+                        path.Reverse();
+
+                        // Add the corridor tile at the end
+                        path.Add(neighbor);
+                    }
+
+                    return neighbor;
+                }
+
+                // Continue walking through walkable tiles
+                if (IsWalkableTile(tile.Type))
+                {
+                    visited.Add(neighbor);
+                    parent[neighbor] = pos;
+                    queue.Enqueue(neighbor);
+                }
             }
-
-            // Když cesta neexistuje
-            if (targetConnector == Point.Empty)
-            {
-                currentRoom = visitedRooms.Pop();
-                continue;
-            }
-            visitedRooms.Push(currentRoom);
-
-            // Najdi tu místnost, které konektor patří
-            Room targetRoom = _rooms.First(r => r.Connectors.Contains(targetConnector));
-            targetRoom.Merged = true;
-
-            // Ostranime sousední konektory našich konektorů
-            currentRoom.RemoveNearbyConnectors(currentConnector);
-            targetRoom.RemoveNearbyConnectors(targetConnector);
-
-            foreach (var point in path)
-            {
-                _grid.GetTile(point).Type = Tile.TileType.CorridorPath;
-            }
-
-            // Z target room uděláme current room
-            currentRoom = targetRoom;
         }
+
+        return null; // No corridor path found
+    }
+
+    private static bool IsWalkableTile(Tile.TileType type)
+    {
+        return type == Tile.TileType.CorridorPath ||
+               type == Tile.TileType.Corridor;
     }
 }

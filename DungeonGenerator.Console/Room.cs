@@ -105,7 +105,10 @@ internal class Room(int min, int max, int id, Grid grid)
 
         foreach (var connector in Connectors)
         {
-            if (Rand.OneIn(chance))
+            bool shouldKeep = Rand.OneIn(chance);
+            bool hasAdjacentSurvivor = _grid.GetNeighbors4(connector).Any(survivors.Contains);
+
+            if (shouldKeep && !hasAdjacentSurvivor)
             {
                 survivors.Add(connector);
             }
@@ -131,5 +134,6 @@ internal class Room(int min, int max, int id, Grid grid)
                 Connectors.Remove(neighbor);
             }
         }
+        Connectors.Remove(connector);
     }
 }
