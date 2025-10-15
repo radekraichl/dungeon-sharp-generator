@@ -1,2 +1,2 @@
 ﻿# Dungeon Generator
-A simple **Dungeon Generator** written in **C# (.NET)**.
+A simple **Dungeon Generator** written in **C#**.
