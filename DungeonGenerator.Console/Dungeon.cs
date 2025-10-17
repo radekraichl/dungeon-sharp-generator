@@ -89,6 +89,26 @@ internal class Dungeon
         return _grid[position.Y][position.X];
     }
 
+    public Tile GetTile(int x, int y)
+    {
+        return _grid[y][x];
+    }
+
+    public void SealUnusedCorridors()
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                var tile = GetTile(x, y);
+                if (tile.Type == Tile.TileType.CorridorMaze)
+                {
+                    tile.Type = Tile.TileType.Wall;
+                }
+            }
+        }
+    }
+
     public IEnumerable<Tile> GetTilesByType(Tile.TileType tileType)
     {
         for (int y = 0; y < Height; y++)
@@ -181,19 +201,21 @@ internal class Dungeon
                             CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorMaze) > 0 ||
                             CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorPath) > 0)
 
-                            chars[y, x] = '█';
+                            chars[y, x] = ' ';
                         else if (printAllWalls)
                             chars[y, x] = '█';
                         else
+                            //chars[y, x] = '█';
                             chars[y, x] = ' ';
                         break;
 
                     case Tile.TileType.Floor:
-                        chars[y, x] = ' ';
+                        chars[y, x] = '█';
                         break;
 
                     case Tile.TileType.CorridorPath:
-                        chars[y, x] = '░';
+                        //chars[y, x] = ' ';
+                        chars[y, x] = '▒';
                         break;
 
                     case Tile.TileType.CorridorMaze:
@@ -202,7 +224,7 @@ internal class Dungeon
 
                     case Tile.TileType.RoomConnector:
                         //chars[y, x] = '█';
-                        chars[y, x] = '.';
+                        chars[y, x] = ' ';
                         break;
 
                     default:
@@ -217,7 +239,7 @@ internal class Dungeon
 
                 if (_grid[y][x].RoomNumber != -1)
                 {
-                    chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
+                    //chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
                 }
             }
         }

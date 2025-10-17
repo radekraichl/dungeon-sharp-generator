@@ -6,7 +6,6 @@ internal class RoomManager(Dungeon grid)
 {
     public string debug;
 
-
     private readonly Dungeon _grid = grid;
     private readonly List<Room> _rooms = [];
 
@@ -93,7 +92,7 @@ internal class RoomManager(Dungeon grid)
             visitedRooms.Push(currentRoom);
 
             currentRoom.RemoveNearbyConnectors(currentConnector);
-            
+
             // Find the target room that owns the found connector
             Room targetRoom = _rooms.First(r => r.Connectors.Contains((Point)targetConnector) && !r.Merged);
             targetRoom.Merged = true;
@@ -115,6 +114,8 @@ internal class RoomManager(Dungeon grid)
         {
             room.RemoveConnectors(20);
         }
+
+        var rr = _rooms;
     }
 
     public void ConnectLooseConnectors()
@@ -228,64 +229,6 @@ internal class RoomManager(Dungeon grid)
 
         return null;
     }
-
-    //private Point? FindNearestConnector(Point start, List<Point> path = null)
-    //{
-    //    var queue = new Queue<Point>();
-    //    var visited = new HashSet<Point>();
-    //    var parent = new Dictionary<Point, Point>();
-
-    //    queue.Enqueue(start);
-    //    visited.Add(start);
-
-    //    while (queue.Count > 0)
-    //    {
-    //        var pos = queue.Dequeue();
-
-    //        foreach (var neighbor in _grid.GetNeighbors4(pos))
-    //        {
-    //            if (visited.Contains(neighbor))
-    //                continue;
-
-    //            var tile = _grid.GetTile(neighbor);
-
-    //            if (IsWalkableTile(tile.Type))
-    //            {
-    //                // Regular walkable tile
-    //                visited.Add(neighbor);
-    //                parent[neighbor] = pos;
-    //                queue.Enqueue(neighbor);
-    //            }
-    //            else if (tile.Type == Tile.TileType.RoomConnector && neighbor != start)
-    //            {
-    //                // Found a target connector
-    //                var room = _rooms.FirstOrDefault(r => r.Connectors.Contains(neighbor));
-    //                var startRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(start));
-
-    //                if (room != null && room != startRoom && !room.Merged)
-    //                {
-    //                    if (path != null)
-    //                    {
-    //                        path.Clear();
-    //                        var current = pos; // Last walkable tile before the connector
-    //                        while (current != start)
-    //                        {
-    //                            path.Add(current);
-    //                            current = parent[current];
-    //                        }
-    //                        path.Add(start);
-    //                        path.Reverse();
-
-    //                        // Finally, add the target connector itself
-    //                        path.Add(neighbor);
-    //                    }
-    //                    return neighbor;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return null;
-    //}
 
     private Point? FindNearestCorridorPath(Point start, List<Point> path = null)
     {

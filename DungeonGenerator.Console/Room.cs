@@ -128,7 +128,7 @@ internal class Room(int min, int max, int id, Dungeon grid)
         {
             var tile = _grid.GetTile(neighbor);
 
-            if (tile.Type == Tile.TileType.RoomConnector)
+            if (Connectors.Contains(neighbor))
             {
                 tile.Type = Tile.TileType.Wall;
                 Connectors.Remove(neighbor);

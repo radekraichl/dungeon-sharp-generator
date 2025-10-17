@@ -7,12 +7,13 @@ while (true)
 {
     var sw = Stopwatch.StartNew();
     Rand.Init(seed);
-    Dungeon dungeon = new(101, 41);
-    dungeon.CraveRooms(5, 11, 200);
+    Dungeon dungeon = new(131, 41);
+    dungeon.CraveRooms(5, 11, 300);
     dungeon.AddMaze();
     dungeon.AddConnectors();
     dungeon.ConnectRooms();
     dungeon.ConnectLooseConnectors();
+    dungeon.SealUnusedCorridors();
     sw.Stop();
     Console.WriteLine(dungeon);
     Console.WriteLine($"SEED: {seed}");
