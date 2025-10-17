@@ -4,17 +4,22 @@ namespace DungeonGenerator;
 
 internal class RoomManager(Dungeon grid)
 {
+    public string debug;
+
+
     private readonly Dungeon _grid = grid;
     private readonly List<Room> _rooms = [];
 
     public void CraveRooms(int min, int max, int numberOfAttempts)
     {
+        int id = 0;
         for (int i = 0; i < numberOfAttempts; i++)
         {
-            Room room = new(min, max, i, _grid);
+            Room room = new(min, max, id, _grid);
             if (room.Carve())
             {
                 _rooms.Add(room);
+                id++;
             }
         }
     }
@@ -31,7 +36,7 @@ internal class RoomManager(Dungeon grid)
                     int posY = tile.Position.Y;
 
                     int countFloor = _grid.CountNeighbours4(posX, posY, x => x.Type == Tile.TileType.Floor);
-                    int countCorr = _grid.CountNeighbours4(posX, posY, x => x.Type == Tile.TileType.Corridor);
+                    int countCorr = _grid.CountNeighbours4(posX, posY, x => x.Type == Tile.TileType.CorridorMaze);
                     if ((countFloor == 1 && countCorr == 1) || countFloor == 2)
                     {
                         if (posX > 0 && posY > 0 && posX < _grid.Width - 1 && posY < _grid.Height - 1)
@@ -49,13 +54,13 @@ internal class RoomManager(Dungeon grid)
     {
         // Select a random starting room
         Room currentRoom = _rooms.RandomElement();
-        debug += $"first = {(char)('0' + currentRoom.ID)}";
 
         Stack<Room> visitedRooms = new();
 
         // Continue until all rooms are connected (merged)
         while (_rooms.Any(r => !r.Merged))
         {
+            debug += $"{(char)('0' + currentRoom.ID)}, ";
             currentRoom.Merged = true;
             Point currentConnector = new();
             Point? targetConnector = null;
@@ -78,6 +83,8 @@ internal class RoomManager(Dungeon grid)
             // No connection found — backtrack to the previous room
             if (targetConnector == null)
             {
+                //if (visitedRooms.Count == 0)
+                //    break;
                 currentRoom = visitedRooms.Pop();
                 continue;
             }
@@ -88,7 +95,7 @@ internal class RoomManager(Dungeon grid)
             currentRoom.RemoveNearbyConnectors(currentConnector);
             
             // Find the target room that owns the found connector
-            Room targetRoom = _rooms.First(r => r.Connectors.Contains((Point)targetConnector));
+            Room targetRoom = _rooms.First(r => r.Connectors.Contains((Point)targetConnector) && !r.Merged);
             targetRoom.Merged = true;
 
             targetRoom.RemoveNearbyConnectors((Point)targetConnector);
@@ -109,8 +116,6 @@ internal class RoomManager(Dungeon grid)
             room.RemoveConnectors(20);
         }
     }
-
-    public string debug;
 
     public void ConnectLooseConnectors()
     {
@@ -141,24 +146,23 @@ internal class RoomManager(Dungeon grid)
         }
     }
 
-
     private Point? FindNearestConnector(Point start, List<Point> path = null)
     {
         var queue = new Queue<Point>();
         var visited = new HashSet<Point>();
         var parent = new Dictionary<Point, Point>();
 
-        var startRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(start));
+        // Handle overlapping connectors
+        var overlappingRooms = _rooms.Where(r => r.Connectors.Contains(start));
 
-        // Handle overlapping connectors: if any other unmerged room shares this connector, return immediately
-        var overlappingRoom = _rooms.FirstOrDefault(r => r != startRoom && r.Connectors.Contains(start) && !r.Merged);
-        if (overlappingRoom != null)
+        if (overlappingRooms.Count() > 1 && overlappingRooms.Any(r => !r.Merged))
         {
             path?.Clear();
-            path?.Add(start); // path contains only the connector itself
+            path?.Add(start); // Path contains only the connector itself
             return start;
         }
 
+        // Perform BFS search starting from the given connector
         queue.Enqueue(start);
         visited.Add(start);
 
@@ -176,7 +180,7 @@ internal class RoomManager(Dungeon grid)
                 // Check if neighbor is a connector for another unmerged room
                 if (tile.Type == Tile.TileType.RoomConnector && !neighbor.Equals(start))
                 {
-                    var targetRoom = _rooms.FirstOrDefault(r => r != startRoom && r.Connectors.Contains(neighbor) && !r.Merged);
+                    var targetRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(neighbor) && !r.Merged && !r.Connectors.Contains(start));
 
                     if (targetRoom != null)
                     {
@@ -224,9 +228,6 @@ internal class RoomManager(Dungeon grid)
 
         return null;
     }
-
-
-
 
     //private Point? FindNearestConnector(Point start, List<Point> path = null)
     //{
@@ -349,6 +350,6 @@ internal class RoomManager(Dungeon grid)
     private static bool IsWalkableTile(Tile.TileType type)
     {
         return type == Tile.TileType.CorridorPath ||
-               type == Tile.TileType.Corridor;
+               type == Tile.TileType.CorridorMaze;
     }
 }

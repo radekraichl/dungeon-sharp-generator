@@ -13,8 +13,7 @@ internal class Tile(Point position, Tile.TileType type)
     {
         Wall,
         Floor,
-        Door,
-        Corridor,
+        CorridorMaze,
         CorridorPath,
         RoomConnector,
     }

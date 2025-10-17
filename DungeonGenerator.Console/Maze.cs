@@ -48,7 +48,7 @@ internal class Maze(Dungeon grid)
         {
             bool isolated = c.Neighbors.Count == 0;
             if (isolated)
-                _grid.SetTile(c.Position, Tile.TileType.Corridor); // convert isolated cell to corridor
+                _grid.SetTile(c.Position, Tile.TileType.CorridorMaze); // convert isolated cell to corridor
             return isolated; // return true to remove the cell from the list
         });
 
@@ -66,7 +66,7 @@ internal class Maze(Dungeon grid)
                 if (tile.Cell != null && tile.Cell.Links.Count > 0)
                 {
                     // Mark this cell as part of the maze (make it walkable)
-                    _grid[y, x].Type = Tile.TileType.Corridor;
+                    _grid[y, x].Type = Tile.TileType.CorridorMaze;
                     // Iterate through all linked neighbors of this cell
                     foreach (var linkedCell in tile.Cell.Links)
                     {
@@ -76,7 +76,7 @@ internal class Maze(Dungeon grid)
                         // Carve the wall = make it a Floor
                         if (wallY >= 0 && wallY < _grid.Height && wallX >= 0 && wallX < _grid.Width)
                         {
-                            _grid[wallY, wallX].Type = Tile.TileType.Corridor;
+                            _grid[wallY, wallX].Type = Tile.TileType.CorridorMaze;
                         }
                     }
                 }

@@ -7,7 +7,7 @@ internal class Dungeon
 {
     private readonly List<List<Tile>> _grid = [];
     private readonly Maze _maze;
-    private readonly RoomManager _roomManager;
+    public readonly RoomManager _roomManager;
 
     public int Width { get; }
     public int Height { get; }
@@ -58,7 +58,6 @@ internal class Dungeon
     {
         _roomManager.CraveRooms(min, max, numberOfAttempts);
         return this;
-
     }
 
     public Dungeon AddConnectors()
@@ -179,7 +178,7 @@ internal class Dungeon
                 {
                     case Tile.TileType.Wall:
                         if (CountNeighbours8(x, y, t => t.Type == Tile.TileType.Floor) > 0 ||
-                            CountNeighbours8(x, y, t => t.Type == Tile.TileType.Corridor) > 0 ||
+                            CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorMaze) > 0 ||
                             CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorPath) > 0)
 
                             chars[y, x] = '█';
@@ -193,15 +192,11 @@ internal class Dungeon
                         chars[y, x] = ' ';
                         break;
 
-                    case Tile.TileType.Door:
-                        chars[y, x] = 'D';
-                        break;
-
                     case Tile.TileType.CorridorPath:
                         chars[y, x] = '░';
                         break;
 
-                    case Tile.TileType.Corridor:
+                    case Tile.TileType.CorridorMaze:
                         chars[y, x] = ' ';
                         break;
 
@@ -222,7 +217,7 @@ internal class Dungeon
 
                 if (_grid[y][x].RoomNumber != -1)
                 {
-                    //chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
+                    chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
                 }
             }
         }

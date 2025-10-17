@@ -1,22 +1,24 @@
 ﻿using DungeonGenerator;
 using System.Diagnostics;
 
-int seed = 132;
+int seed = 58;
 
 while (true)
 {
     var sw = Stopwatch.StartNew();
-
     Rand.Init(seed);
-    Dungeon dungeon = new(101, 31);
-    dungeon.CraveRooms(5, 11, 200).AddMaze().AddConnectors();
+    Dungeon dungeon = new(101, 41);
+    dungeon.CraveRooms(5, 11, 200);
+    dungeon.AddMaze();
+    dungeon.AddConnectors();
     dungeon.ConnectRooms();
     dungeon.ConnectLooseConnectors();
     sw.Stop();
-
     Console.WriteLine(dungeon);
     Console.WriteLine($"SEED: {seed}");
     Console.WriteLine($"Generation time: {sw.ElapsedMilliseconds} ms");
+    Console.WriteLine(dungeon._roomManager.debug);
+    //Console.WriteLine((char)('0' + 28));
 
     var key = Console.ReadKey(true);
     if (key.Key == ConsoleKey.RightArrow)
