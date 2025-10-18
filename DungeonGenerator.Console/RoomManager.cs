@@ -27,7 +27,9 @@ internal class RoomManager(Dungeon grid)
         {
             foreach (var tile in room.GetRoomTilesWithConnectors())
             {
-                if (tile.Type == Tile.TileType.Wall || tile.Type == Tile.TileType.RoomConnector)
+                bool tileIsConnector = _rooms.Any(r => r.Connectors.Contains(tile.Position));
+
+                if (tile.Type == Tile.TileType.Wall || tileIsConnector)
                 {
                     int posX = tile.Position.X;
                     int posY = tile.Position.Y;
@@ -38,7 +40,6 @@ internal class RoomManager(Dungeon grid)
                     {
                         if (posX > 0 && posY > 0 && posX < _grid.Width - 1 && posY < _grid.Height - 1)
                         {
-                            tile.Type = Tile.TileType.RoomConnector;
                             room.Connectors.Add(new Point(posX, posY));
                         }
                     }
@@ -170,9 +171,10 @@ internal class RoomManager(Dungeon grid)
                     continue;
 
                 var tile = _grid.GetTile(neighbor);
+                bool neighborIsConnector = _rooms.Any(r => r.Connectors.Contains(neighbor));
 
                 // Check if neighbor is a connector for another unmerged room
-                if (tile.Type == Tile.TileType.RoomConnector && !neighbor.Equals(start))
+                if (neighborIsConnector && !neighbor.Equals(start))
                 {
                     var targetRoom = _rooms.FirstOrDefault(r => r.Connectors.Contains(neighbor) && !r.Merged && !r.Connectors.Contains(start));
 

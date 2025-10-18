@@ -15,6 +15,5 @@ internal class Tile(Point position, Tile.TileType type)
         Floor,
         CorridorMaze,
         CorridorPath,
-        RoomConnector,
     }
 }

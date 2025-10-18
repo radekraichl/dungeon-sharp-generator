@@ -220,11 +220,6 @@ internal class Dungeon
                         chars[y, x] = ' ';
                         break;
 
-                    case Tile.TileType.RoomConnector:
-                        //chars[y, x] = '█';
-                        chars[y, x] = ' ';
-                        break;
-
                     default:
                         chars[y, x] = '?';
                         break;
