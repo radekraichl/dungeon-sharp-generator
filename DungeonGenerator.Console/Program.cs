@@ -19,6 +19,7 @@ while (true)
     Console.WriteLine(dungeon);
     Console.WriteLine($"SEED: {seed}");
     Console.WriteLine($"Generation time: {sw.ElapsedMilliseconds} ms");
+    Console.WriteLine("Press the left and right arrows to change the seed.");
 
     var key = Console.ReadKey(true);
     if (key.Key == ConsoleKey.RightArrow)
@@ -29,7 +30,7 @@ while (true)
     {
         seed--;
     }
-    else if (key.Key == ConsoleKey.Enter)
+    else if (key.Key == ConsoleKey.Escape)
     {
         break;
     }
