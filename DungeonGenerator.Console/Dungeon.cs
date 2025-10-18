@@ -204,6 +204,7 @@ internal class Dungeon
                         break;
 
                     case Tile.TileType.CorridorMaze:
+                        chars[y, x] = ' ';
                         break;
 
                     default:

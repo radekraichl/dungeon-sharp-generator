@@ -1,7 +1,7 @@
 ﻿using DungeonGenerator;
 using System.Diagnostics;
 
-int seed = 0;
+int seed = 1000;
 
 while (true)
 {
