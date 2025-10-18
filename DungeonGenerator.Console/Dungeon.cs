@@ -183,9 +183,6 @@ internal class Dungeon
 
     public override string ToString()
     {
-        bool printCells = false;
-        bool printAllWalls = false;
-
         char[,] chars = new char[Height, Width];
 
         for (int y = 0; y < Height; y++)
@@ -195,16 +192,7 @@ internal class Dungeon
                 switch (_grid[y][x].Type)
                 {
                     case Tile.TileType.Wall:
-                        if (CountNeighbours8(x, y, t => t.Type == Tile.TileType.Floor) > 0 ||
-                            CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorMaze) > 0 ||
-                            CountNeighbours8(x, y, t => t.Type == Tile.TileType.CorridorPath) > 0)
-
-                            chars[y, x] = ' ';
-                        else if (printAllWalls)
-                            chars[y, x] = '█';
-                        else
-                            //chars[y, x] = '█';
-                            chars[y, x] = ' ';
+                        chars[y, x] = ' ';
                         break;
 
                     case Tile.TileType.Floor:
@@ -212,27 +200,15 @@ internal class Dungeon
                         break;
 
                     case Tile.TileType.CorridorPath:
-                        //chars[y, x] = ' ';
                         chars[y, x] = '▒';
                         break;
 
                     case Tile.TileType.CorridorMaze:
-                        chars[y, x] = ' ';
                         break;
 
                     default:
                         chars[y, x] = '?';
                         break;
-                }
-
-                if (_grid[y][x].Cell != null && printCells)
-                {
-                    chars[y, x] = 'c';
-                }
-
-                if (_grid[y][x].RoomNumber != -1)
-                {
-                    //chars[y, x] = (char)('0' + _grid[y][x].RoomNumber);
                 }
             }
         }
@@ -247,6 +223,7 @@ internal class Dungeon
             }
             sb.AppendLine();
         }
+
         return sb.ToString();
     }
 }
