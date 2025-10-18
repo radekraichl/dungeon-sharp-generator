@@ -4,8 +4,6 @@ namespace DungeonGenerator;
 
 internal class RoomManager(Dungeon grid)
 {
-    public string debug;
-
     private readonly Dungeon _grid = grid;
     private readonly List<Room> _rooms = [];
 
@@ -59,7 +57,6 @@ internal class RoomManager(Dungeon grid)
         // Continue until all rooms are connected (merged)
         while (_rooms.Any(r => !r.Merged))
         {
-            debug += $"{(char)('0' + currentRoom.ID)}, ";
             currentRoom.Merged = true;
             Point currentConnector = new();
             Point? targetConnector = null;
@@ -82,8 +79,6 @@ internal class RoomManager(Dungeon grid)
             // No connection found — backtrack to the previous room
             if (targetConnector == null)
             {
-                //if (visitedRooms.Count == 0)
-                //    break;
                 currentRoom = visitedRooms.Pop();
                 continue;
             }
@@ -114,8 +109,6 @@ internal class RoomManager(Dungeon grid)
         {
             room.RemoveConnectors(20);
         }
-
-        var rr = _rooms;
     }
 
     public void ConnectLooseConnectors()
@@ -210,6 +203,7 @@ internal class RoomManager(Dungeon grid)
                                 path.Add(neighbor);
                             }
                         }
+
                         return neighbor;
                     }
 
@@ -226,7 +220,6 @@ internal class RoomManager(Dungeon grid)
                 }
             }
         }
-
         return null;
     }
 
@@ -292,7 +285,6 @@ internal class RoomManager(Dungeon grid)
 
     private static bool IsWalkableTile(Tile.TileType type)
     {
-        return type == Tile.TileType.CorridorPath ||
-               type == Tile.TileType.CorridorMaze;
+        return type == Tile.TileType.CorridorPath || type == Tile.TileType.CorridorMaze;
     }
 }

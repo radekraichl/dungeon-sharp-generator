@@ -7,7 +7,7 @@ internal class Dungeon
 {
     private readonly List<List<Tile>> _grid = [];
     private readonly Maze _maze;
-    public readonly RoomManager _roomManager;
+    private readonly RoomManager _roomManager;
 
     public int Width { get; }
     public int Height { get; }
@@ -155,7 +155,6 @@ internal class Dungeon
             if (predicate(_grid[ny][nx]))
                 count++;
         }
-
         return count;
     }
 
@@ -179,7 +178,6 @@ internal class Dungeon
                     count++;
             }
         }
-
         return count;
     }
 

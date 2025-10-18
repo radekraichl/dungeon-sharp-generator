@@ -12,12 +12,11 @@ internal class Cell(Point position)
     public Cell South { get; set; }
     public Cell East { get; set; }
     public Cell West { get; set; }
-
     public List<Cell> Neighbors => [.. new[] { North, South, East, West }.OfType<Cell>()];
+    public List<Cell> Links => [.. links.Keys];
 
     // Cells that are linked to this cell
     private readonly Dictionary<Cell, bool> links = [];
-    public List<Cell> Links => [.. links.Keys];
 
     public void Link(Cell cell, bool bidirectional = true)
     {

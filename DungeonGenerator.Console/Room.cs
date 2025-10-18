@@ -20,7 +20,6 @@ internal class Room(int min, int max, int id, Dungeon grid)
     public int Right => Position.X + Width - 1;
     public int Top => Position.Y;
     public int Bottom => Position.Y + Height - 1;
-    public Point Center => new(Position.X + Width / 2, Position.Y + Height / 2);
 
     public IEnumerable<Tile> GetRoomTilesWithConnectors()
     {
@@ -52,14 +51,10 @@ internal class Room(int min, int max, int id, Dungeon grid)
         Position = new Point(posX, posY);
 
         if (maxX <= 1 || maxY <= 1)
-        {
             return false;
-        }
 
         if (CheckCollision(Position.X, Position.Y, Width, Height))
-        {
             return false;
-        }
 
         for (int y = Top; y <= Bottom; y++)
         {
@@ -92,11 +87,6 @@ internal class Room(int min, int max, int id, Dungeon grid)
             }
         }
         return false;
-    }
-
-    public bool Intersects(Room other)
-    {
-        return !(Right < other.Left || Left > other.Right || Bottom < other.Top || Top > other.Bottom);
     }
 
     public void RemoveConnectors(int chance = 1)
@@ -134,6 +124,7 @@ internal class Room(int min, int max, int id, Dungeon grid)
                 Connectors.Remove(neighbor);
             }
         }
+
         Connectors.Remove(connector);
     }
 }
