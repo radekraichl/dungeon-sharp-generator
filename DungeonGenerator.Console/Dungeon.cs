@@ -3,8 +3,10 @@ using System.Text;
 
 namespace DungeonGenerator;
 
-internal class Dungeon
+public class Dungeon
 {
+    public List<List<Tile>> Grid => _grid;
+
     private readonly List<List<Tile>> _grid = [];
     private readonly Maze _maze;
     private readonly RoomManager _roomManager;

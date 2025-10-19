@@ -2,7 +2,7 @@
 
 namespace DungeonGenerator;
 
-internal class Cell(Point position)
+public class Cell(Point position)
 {
     // Position in the maze
     public Point Position { get; } = position;

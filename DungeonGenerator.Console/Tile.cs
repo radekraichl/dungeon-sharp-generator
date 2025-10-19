@@ -2,7 +2,7 @@
 
 namespace DungeonGenerator;
 
-internal class Tile(Point position, Tile.TileType type)
+public class Tile(Point position, Tile.TileType type)
 {
     public Point Position { get; set; } = position;
     public TileType Type { get; set; } = type;

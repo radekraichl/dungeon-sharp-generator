@@ -1,6 +1,6 @@
 ﻿namespace DungeonGenerator;
 
-static class Rand
+public static class Rand
 {
     private static Random _rnd = null;
     
