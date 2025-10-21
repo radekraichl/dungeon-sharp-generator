@@ -5,9 +5,8 @@ namespace DungeonGenerator;
 
 public class Dungeon
 {
-    public List<List<Tile>> Grid => _grid;
-
-    private readonly List<List<Tile>> _grid = [];
+    public Tile[,] Grid => _grid;
+    private readonly Tile[,] _grid;
     private readonly Maze _maze;
     private readonly RoomManager _roomManager;
 
@@ -19,35 +18,18 @@ public class Dungeon
         Width = width;
         Height = height;
 
-        for (int y = 0; y < height; y++)    // rows
+        _grid = new Tile[height, width]; // 2D pole (řádky, sloupce)
+
+        for (int y = 0; y < height; y++)
         {
-            var row = new List<Tile>();
-            for (int x = 0; x < width; x++) // cols
+            for (int x = 0; x < width; x++)
             {
-                row.Add(new Tile(new Point(x, y), Tile.TileType.Wall));
+                _grid[y, x] = new Tile(new Point(x, y), Tile.TileType.Wall);
             }
-            _grid.Add(row);
         }
 
-        _maze = new(this);
+        _maze = new Maze(this);
         _roomManager = new RoomManager(this);
-    }
-
-    // Indexer
-    public Tile this[int row, int column]
-    {
-        get
-        {
-            if (row < 0 || row >= Height)
-            {
-                return null;
-            }
-            if (column < 0 || column >= Width)
-            {
-                return null;
-            }
-            return _grid[row][column];
-        }
     }
 
     public Dungeon AddMaze()
@@ -82,18 +64,18 @@ public class Dungeon
 
     public void SetTile(Point position, Tile.TileType type, int roomNumber = -1)
     {
-        _grid[position.Y][position.X].Type = type;
-        _grid[position.Y][position.X].RoomNumber = roomNumber;
+        _grid[position.Y, position.X].Type = type;
+        _grid[position.Y, position.X].RoomNumber = roomNumber;
     }
 
     public Tile GetTile(Point position)
     {
-        return _grid[position.Y][position.X];
+        return _grid[position.Y, position.X];
     }
 
     public Tile GetTile(int x, int y)
     {
-        return _grid[y][x];
+        return _grid[y, x];
     }
 
     public void SealUnusedCorridors()
@@ -117,7 +99,7 @@ public class Dungeon
         {
             for (int x = 0; x < Width; x++)
             {
-                var tile = _grid[y][x];
+                var tile = _grid[y, x];
                 if (tile.Type == tileType)
                 {
                     yield return tile;
@@ -154,7 +136,7 @@ public class Dungeon
             if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
                 continue;
 
-            if (predicate(_grid[ny][nx]))
+            if (predicate(_grid[ny, nx]))
                 count++;
         }
         return count;
@@ -176,7 +158,7 @@ public class Dungeon
                 if (nx < 0 || nx >= Width || ny < 0 || ny >= Height)
                     continue;
 
-                if (predicate(_grid[ny][nx]))
+                if (predicate(_grid[ny, nx]))
                     count++;
             }
         }
@@ -191,7 +173,7 @@ public class Dungeon
         {
             for (int x = 0; x < Width; x++)
             {
-                switch (_grid[y][x].Type)
+                switch (_grid[y, x].Type)
                 {
                     case Tile.TileType.Wall:
                         chars[y, x] = ' ';

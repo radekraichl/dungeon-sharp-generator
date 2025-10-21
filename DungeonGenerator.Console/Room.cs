@@ -27,7 +27,7 @@ internal class Room(int min, int max, int id, Dungeon grid)
         {
             for (int j = Left - 1; j < Left + Width + 1; j++)
             {
-                yield return _grid[i, j];
+                yield return _grid.Grid[i, j];
             }
         }
     }
@@ -80,7 +80,7 @@ internal class Room(int min, int max, int id, Dungeon grid)
                     return true;
                 }
 
-                if (_grid[i, j].Type == Tile.TileType.Floor)
+                if (_grid.Grid[i, j].Type == Tile.TileType.Floor)
                 {
                     return true;
                 }

@@ -56,7 +56,7 @@ while (!Raylib.WindowShouldClose())
     {
         for (int x = 0; x < dungeon.Width; x++)
         {
-            var tile = dungeon.Grid[y][x];
+            var tile = dungeon.Grid[y, x];
 
             int drawX = x * tileSize + margin;
             int drawY = y * tileSize + margin;
